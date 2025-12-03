@@ -767,45 +767,128 @@
   <script>
     /**
      * Functionality for "Show More/Less" in Certificates Section
-     * The original, complex 'Show More/Less' logic has been commented out to polish and remove unnecessary lines.
-     * Only the essential Isotope initialization for filtering is retained to ensure the layout remains functional.
+     * This logic manages showing 6 items initially and loading 6 more on click.
      */
     document.addEventListener('DOMContentLoaded', function() {
       const certificatesContainer = document.querySelector('.certificates-container');
+      const showMoreBtn = document.getElementById('show-more-certs');
       const filterList = document.getElementById('certificates-filters');
+      const certificatesSection = document.getElementById('certificates');
+      
+      // Configuration: Show 6 items initially, and load 6 more each time.
+      const itemsPerLoad = 6;
+      let currentLimit = itemsPerLoad;
       let iso = null;
 
       // Initialize Isotope for the certificates section
       if (certificatesContainer) {
+        // Isotope must be initialized without an initial filter so it sees all items
         iso = new Isotope(certificatesContainer, {
           itemSelector: '.certificate-item',
-          layoutMode: 'fitRows'
+          layoutMode: 'fitRows',
+          // Use a special filter function to manage visibility manually
+          filter: function(itemElem) {
+            // Only include items that do NOT have the 'hidden-cert' class in the layout
+            return !itemElem.classList.contains('hidden-cert');
+          }
         });
       }
 
+      function updateVisibility(activeFilter) {
+        // Find all items that match the current active filter
+        const selector = activeFilter === '*' ? '.certificate-item' : activeFilter;
+        const certificateItems = certificatesContainer.querySelectorAll(selector);
+        
+        let visibleCount = 0;
+        
+        // First, hide all items to start fresh
+        certificatesContainer.querySelectorAll('.certificate-item').forEach(item => {
+            item.classList.add('hidden-cert');
+        });
+
+        // Apply visibility to filtered items based on currentLimit
+        certificateItems.forEach(item => {
+          if (visibleCount < currentLimit) {
+            item.classList.remove('hidden-cert');
+            visibleCount++;
+          }
+        });
+
+        // Manually refresh Isotope layout to apply changes
+        if (iso) {
+          iso.arrange();
+        }
+        
+        // 3. Show/Hide the button and change its text
+        if (certificateItems.length > currentLimit) {
+          // More items exist than are currently visible, show "Show More"
+          showMoreBtn.textContent = 'Show More Certificates';
+          showMoreBtn.classList.remove('show-less-mode');
+          showMoreBtn.style.display = 'inline-block';
+        } else if (certificateItems.length > itemsPerLoad) {
+          // All items are visible, but there were more than the initial limit, show "Show Less"
+          showMoreBtn.textContent = 'Show Less Certificates';
+          showMoreBtn.classList.add('show-less-mode');
+          showMoreBtn.style.display = 'inline-block';
+        } else {
+          // Less than or equal to initial limit, or no items. Hide button.
+          showMoreBtn.style.display = 'none';
+        }
+      }
+
       // --- Filter Button Handler ---
-      if (filterList && iso) {
+      if (filterList) {
         filterList.querySelectorAll('li').forEach(filterItem => {
           filterItem.addEventListener('click', function(e) {
             e.preventDefault();
             filterList.querySelector('.filter-active').classList.remove('filter-active');
             this.classList.add('filter-active');
 
+            currentLimit = itemsPerLoad; // Reset limit when filter changes
             const newFilter = this.getAttribute('data-filter');
-
-            // Set Isotope filter
-            iso.arrange({
-                filter: newFilter
-            });
+            
+            // Wait briefly for Isotope to finish its filter animation before updating visibility
+            setTimeout(() => updateVisibility(newFilter), 10);
           });
         });
       }
-
-      // Hide the "Show More" button by default as its logic has been removed.
-      const showMoreBtn = document.getElementById('show-more-certs');
+      
+      // --- Show More/Less Button Handler ---
       if (showMoreBtn) {
-        showMoreBtn.style.display = 'none';
+        showMoreBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const activeFilterElement = filterList.querySelector('.filter-active');
+          const activeFilter = activeFilterElement ? activeFilterElement.getAttribute('data-filter') : '*';
+          const selector = activeFilter === '*' ? '.certificate-item' : activeFilter;
+          const totalFilteredItems = certificatesContainer.querySelectorAll(selector).length;
+          
+          if (showMoreBtn.textContent.includes('Show Less')) {
+            // SHOW LESS logic: Reset limit and scroll to the top of the section
+            currentLimit = itemsPerLoad;
+            
+            if (certificatesSection) {
+              window.scrollTo({
+                top: certificatesSection.offsetTop - 50,
+                behavior: 'smooth'
+              });
+            }
+            
+          } else {
+            // SHOW MORE logic: Increase the limit by 6
+            currentLimit = Math.min(currentLimit + itemsPerLoad, totalFilteredItems);
+          }
+
+          // Re-evaluate visibility and button state
+          updateVisibility(activeFilter);
+        });
       }
+
+      // --- Initial Load ---
+      // Apply the 6-item limit after the page elements are loaded
+      window.addEventListener('load', () => {
+        updateVisibility('*'); // Start with all items, limited to 6
+      });
 
     });
   </script>
