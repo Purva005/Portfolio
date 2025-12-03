@@ -253,28 +253,3 @@
   new PureCounter();
 
 })()
-
-// Certificates Filter
-let certificatesContainer = document.querySelector('.certificates-container');
-if (certificatesContainer) {
-  let certificatesIsotope = new Isotope(certificatesContainer, {
-    itemSelector: '.certificate-item',
-    layoutMode: 'masonry'
-  });
-
-  let certificatesFilters = document.querySelectorAll('#certificates-filters li');
-
-  certificatesFilters.forEach(function(filter) {
-    filter.addEventListener('click', function(e) {
-      e.preventDefault();
-      certificatesFilters.forEach(function(el) {
-        el.classList.remove('filter-active');
-      });
-      this.classList.add('filter-active');
-
-      certificatesIsotope.arrange({
-        filter: this.getAttribute('data-filter')
-      });
-    });
-  });
-}
