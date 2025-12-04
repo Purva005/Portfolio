@@ -1223,3 +1223,19 @@ section {
 .hidden-cert {
     display: none !important;
 }
+
+section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.6s ease-out;
+}
+
+section.section-visible {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+#skills .progress-bar {
+  transition: width 1.5s ease-in-out;
+  width: 0; /* starting point */
+}

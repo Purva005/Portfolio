@@ -19,6 +19,11 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <link href="assets/css/style.css" rel="stylesheet">
+  <style>
+/* Smooth Load on Scroll */
+section { opacity: 0; transform: translateY(40px); transition: all .7s ease-out; }
+section.section-visible { opacity: 1; transform: translateY(0); }
+</style>
 
 </head>
 
@@ -53,14 +58,18 @@
           <li><a href="#testimonials" class="nav-link scrollto"><i class="bx bx-user"></i> <span>Testimonials</span></a></li>
         </ul>
       </nav></div>
-  </header><section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+  </header>
+  
+  <!-- HERO -->
+  <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
     <div class="hero-container" data-aos="fade-in">
       <h1>Purva's Portfolio</h1>
       <p><span class="typed" data-typed-items="''Welcome to My World...''"></span></p>
     </div>
   </section><main id="main">
 
-    <section id="about" class="about">
+  <!-- ABOUT SECTION -->
+  <section id="about" class="about">
       <div class="container">
 
         <div class="section-title">
@@ -88,14 +97,15 @@
         </div>
 
       </div>
-    </section><section id="certificates" class="certificates section-bg">
-  <div class="container">
-
-    <div class="section-title">
+    </section>
+    
+  <!-- CERTIFICATES -->
+  <section id="certificates" class="certificates section-bg">
+    <div class="container">
+      <div class="section-title">
       <h2>Certificates</h2>
       <p>A showcase of my professional certifications, achievements, and participation recognitions.</p>
     </div>
-
     <div class="row" data-aos="fade-up">
       <div class="col-lg-12 d-flex justify-content-center">
         <ul id="certificates-filters" class="filter-list">
@@ -107,7 +117,7 @@
       </div>
     </div>
 
-    <div class="row certificates-container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row certificates-container" data-aos="fade-up" data-aos-delay="50">
 
       <div class="col-lg-4 col-md-6 certificate-item professionals">
         <div class="certificate-card">
@@ -221,15 +231,25 @@
         </div>
       </div>
 
+      <div class="col-lg-4 col-md-6 certificate-item participations">
+        <div class="certificate-card">
+          <div class="certificate-img">
+            <img src="assets/img/Certificates/C (15.1).jpeg" class="img-fluid" alt="">
+          </div>
+        </div>
       </div>
 
-    <div class="row" data-aos="fade-up" data-aos-delay="200">
+    </div>
+
+    <div class="row" data-aos="fade-up" data-aos-delay="150">
       <div class="col-lg-12 text-center mt-4">
         <a id="show-more-certs" class="btn btn-primary" href="#" role="button" style="display: none;">Show More Certificates</a>
       </div>
     </div>
     </div>
 </section>
+
+<!-- EXPERTISE -->
 <section id="facts" class="facts">
       <div class="container">
 
@@ -300,7 +320,10 @@
         </div>
 
       </div>
-    </section><section id="skills" class="skills section-bg">
+    </section>
+    
+    <!-- SKILLS -->
+    <section id="skills" class="skills section-bg">
       <div class="container">
 
         <div class="section-title">
@@ -377,7 +400,10 @@
         </div>
 
       </div>
-    </section><section id="resume" class="resume">
+    </section>
+    
+    <!-- RESUME -->
+    <section id="resume" class="resume">
       <div class="container">
 
         <div class="section-title">
@@ -534,7 +560,10 @@
     </div>
 
       </div>
-    </section><section id="portfolio" class="portfolio section-bg">
+    </section>
+    
+    <!-- PROJECTS -->
+    <section id="portfolio" class="portfolio section-bg">
       <div class="container">
 
         <div class="section-title">
@@ -638,7 +667,10 @@
         </div>
 
       </div>
-    </section><section id="services" class="services">
+    </section>
+    
+    <!-- SERVICES -->
+    <section id="services" class="services">
       <div class="container">
 
         <div class="section-title">
@@ -674,7 +706,10 @@
         </div>
 
       </div>
-    </section><section id="testimonials" class="testimonials section-bg">
+    </section>
+    
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="testimonials section-bg">
       <div class="container">
 
         <div class="section-title">
@@ -740,7 +775,11 @@
         </div>
 
       </div>
-    </section></main><div class="container" style="display: flex; flex-direction: column;  align-items: center; height: 100px;">
+    </section>
+  </main>
+  
+  <!-- FOOTER -->
+  <div class="container" style="display: flex; flex-direction: column;  align-items: center; height: 100px;">
       <div class="copyright"><br>
         © Copyright <strong><span>Purva's Portfolio</span></strong>
       </div>
@@ -752,6 +791,7 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
+  <!-- JS Files -->
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -891,7 +931,49 @@
       });
 
     });
-  </script>
+
+AOS.init({ duration: 400, easing: "ease-in-out", once: false });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+const sections = document.querySelectorAll("section");
+const obs = new IntersectionObserver(entries => {
+entries.forEach(e => {
+if(e.isIntersecting){ e.target.classList.add("section-visible"); AOS.refresh(); }
+});
+});
+
+
+sections.forEach(sec => obs.observe(sec));
+});
+
+// SKILLS BAR ANIMATION FIX
+document.addEventListener("DOMContentLoaded", () => {
+  const skillsSection = document.querySelector("#skills");
+  const skillBars = document.querySelectorAll("#skills .progress-bar");
+
+  const skillsObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+
+        // Trigger actual progress animation
+        skillBars.forEach(bar => {
+          const val = bar.getAttribute("aria-valuenow");
+          bar.style.width = val + "%";
+        });
+
+        // Refresh AOS to ensure animations run
+        setTimeout(() => AOS.refresh(), 150);
+
+        // Run only once
+        skillsObserver.unobserve(skillsSection);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  skillsObserver.observe(skillsSection);
+});
+</script>
 
 </body>
 
