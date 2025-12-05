@@ -1239,3 +1239,61 @@ section.section-visible {
   transition: width 1.5s ease-in-out;
   width: 0; /* starting point */
 }
+
+/* COLLAGE SECTION */
+.collage-section {
+  padding: 70px 0;
+}
+
+.masonry {
+  column-count: 3;
+  column-gap: 25px;
+}
+
+@media (max-width: 991px) {
+  .masonry { column-count: 2; }
+}
+@media (max-width: 600px) {
+  .masonry { column-count: 1; }
+}
+
+/* Masonry Items */
+.masonry-item {
+  width: 100%;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  display: inline-block;
+}
+
+.masonry-item img {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  transition: transform .45s ease, box-shadow .45s ease;
+}
+
+/* Hover effect */
+.masonry-item:hover img {
+  transform: scale(1.05);
+  box-shadow: 0px 12px 25px rgba(0,0,0,0.15);
+}
+
+/* Custom Sizes */
+.masonry-item.tall img {
+  height: 420px;
+}
+
+.masonry-item.square img {
+  height: 300px;
+}
+
+.masonry-item.wide img {
+  height: 250px;
+}
+
+.masonry-item a {
+  display: block;
+  text-decoration: none;
+}

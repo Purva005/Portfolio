@@ -253,3 +253,11 @@
   new PureCounter();
 
 })()
+
+// Graphics Collage Fullscreen Lightbox
+const collageLightbox = GLightbox({
+  selector: '.design-lightbox',
+  touchNavigation: true,
+  loop: true,
+  zoomable: true,
+});
