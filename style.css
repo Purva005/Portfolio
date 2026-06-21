@@ -75,6 +75,10 @@ body{
 
     font-weight: 400;
 
+    overflow-x:hidden;
+
+    width:100%;
+
     background:#fff;
 
     color:var(--text);
@@ -84,6 +88,17 @@ body{
     line-height:1.8;
 
     padding: 10px 0;
+}
+
+@media (max-width:768px){
+
+    *{
+        width:100%;
+        max-width:280px;
+        margin:auto;
+        display:block;
+    }
+
 }
 
 img{
@@ -2219,4 +2234,21 @@ section{
     background:#7c3aed;
     border-radius:50%;
     border:4px solid #fff;
+}
+
+/* --- Dynamic Success Notification Overlay Context Elements --- */
+.success-popup {
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    z-index: 10000;
+}
+
+.success-popup.active {
+    opacity: 1;
+    visibility: visible;
 }
