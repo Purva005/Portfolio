@@ -1596,7 +1596,7 @@
                     <form id="contactForm" action="https://formsubmit.co/ajax/sukhwalpurva@gmail.com" method="POST" autocomplete="off" class="contact-form-modern">
                         <input type="hidden" name="_captcha" value="false">
                         <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" value="https://purva005.github.io/Portfolio/">
+                        <!-- <input type="hidden" name="_next" value="https://purva005.github.io/Portfolio/"> -->
 
                         <div class="row">
 
@@ -1820,6 +1820,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("contactForm");
     const popup = document.getElementById("successPopup");
 
+    if (!form) {
+        console.error("contactForm not found!");
+        return;
+    }
+
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
@@ -1834,34 +1839,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     method: "POST",
                     body: formData,
                     headers: {
-                        Accept: "application/json"
+                        "Accept": "application/json"
                     }
                 }
             );
 
-            const result = await response.json();
+            const data = await response.json();
 
-            if(result.success === "true" || response.ok){
+            console.log("FormSubmit Response:", data);
 
-                popup.classList.add("show");
+            if (response.ok) {
+
+                if (popup) {
+
+                    popup.classList.add("show");
+
+                    setTimeout(() => {
+                        popup.classList.remove("show");
+                    }, 3000);
+
+                } else {
+
+                    alert("✅ Message Sent Successfully!");
+
+                }
 
                 form.reset();
 
-                setTimeout(() => {
-                    popup.classList.remove("show");
-                }, 3000);
-
             } else {
 
-                alert("Failed to send message.");
+                alert("❌ Failed to send message.");
 
             }
 
-        } catch(error) {
+        } catch (error) {
 
-            console.error(error);
+            console.error("Submission Error:", error);
 
-            alert("Something went wrong. Please try again.");
+            alert("❌ Something went wrong. Please try again.");
 
         }
 
